@@ -1,27 +1,29 @@
 
 #include "DAC4725_lib.h"
-bool DAC4725::begin(uint16_t Vdd){
+/* ============ Setup & begin ============ */
+bool DAC4725::begin(uint16_t Vdd){ //parameter 1  - supply votage 
   _vdd = Vdd;
   _address = DEFAULT_ADDRESS;
   buffer[0] = DEFAULT_MODE;
   Wire.begin();
   Wire.beginTransmission(_address);
 }
-bool DAC4725::begin(uint16_t Vdd, uint8_t address){
+bool DAC4725::begin(uint16_t Vdd, uint8_t address){//parameter 1  - supply votage, 2 - device address
   _address = address;
   buffer[0] = DEFAULT_MODE;
   _vdd = Vdd;
   Wire.begin();
   Wire.beginTransmission(_address);
 }
-bool DAC4725::begin(uint16_t Vdd, uint8_t address, MODE mode){
+bool DAC4725::begin(uint16_t Vdd, uint8_t address, MODE mode){//parameter 1  - supply votage, 2 - device address, 3 - device mode(standart, eeprom)
   _address = address;
   buffer[0] = mode;
   _vdd = Vdd;
   Wire.begin();
   Wire.beginTransmission(_address);
 }
-bool DAC4725::checkConnect(){
+/* ============ Connection and check ============ */
+bool DAC4725::checkConnect(){//check device connect, WARNING !!! you need to disconnect another I2C devices
     byte error, address;
     int nDevices;
     Serial.begin(9600);
@@ -44,7 +46,7 @@ bool DAC4725::checkConnect(){
  
 }
 
-uint16_t DAC4725::getAddress(){
+uint16_t DAC4725::getAddress(){//get DAC I2C address , WARNING !!! you need to disconnect another I2C devices
     byte error, address;
     int nDevices;
  
@@ -64,12 +66,6 @@ uint16_t DAC4725::getAddress(){
                 return true;
                 nDevices++;
         }
-        // else if (error==4) {
-        //     //Serial.print("Unknow error at address 0x");
-        //     if (address<16)
-        //         Serial.print("0");
-        //     Serial.println(address,HEX);
-        // } 
     }
     if (nDevices == 0)
         //Serial.println("No I2C devices found\n");
@@ -81,7 +77,8 @@ uint16_t DAC4725::getAddress(){
     return address;
  
 }
-void DAC4725::setVoltage(uint16_t mlVoltage){
+/* ============ Set voltage & mode ============ */
+void DAC4725::setVoltage(uint16_t mlVoltage){//set DAC output voltage. Parameter 1 - output voltage 
     Wire.beginTransmission(_address);
   _mlVoltage = mlVoltage;
   uint16_t DAC_in;
@@ -95,9 +92,9 @@ void DAC4725::setVoltage(uint16_t mlVoltage){
   Wire.write(buffer[2]);
   Wire.endTransmission(_address);
 }
-void DAC4725::setMode(MODE mode){
+void DAC4725::setMode(MODE mode){//set new DAC mode
   buffer[0] = mode;
 }
-void DAC4725::disconnect(){
+void DAC4725::disconnect(){//disconnect DAC from the I2C
   Wire.endTransmission(_address);
 }
