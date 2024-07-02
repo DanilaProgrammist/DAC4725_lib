@@ -6,8 +6,8 @@
 
 #define DEFAULT_ADDRESS 0x61
 typedef enum {
-    DEFAULT_MODE = 0b01000000,
-    EEPROM_MODE = 0b01100000
+    DEFAULT_MODE = 0b01000000,//startd mode
+    EEPROM_MODE = 0b01100000// mode with write to DAC eeprom
 }MODE;
 class DAC4725
 {
